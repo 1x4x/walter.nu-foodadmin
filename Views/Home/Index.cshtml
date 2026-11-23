@@ -40,7 +40,7 @@
                 <div class="food-grid">
                     @foreach (var food in foods)
                     {
-                        var image = Model.Images.FirstOrDefault(i => i.Id == food.ImageId);
+                        var image = Model.Images.FirstOrDefault(i => i.Id == food.ImageId && food.ImageIds != null && food.ImageIds.Contains(i.Id));
                         <article class="food-card @(food.Featured ? "featured" : "")">
                             <div class="food-photo" style="@(image is null ? "" : "background-image:url('/uploads/" + image.FileName + "')")">
                                 @if (image is null) { <span class="placeholder-icon">✦</span> }

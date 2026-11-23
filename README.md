@@ -175,3 +175,17 @@ All modifying admin forms require an authenticated admin cookie and anti-forgery
 ## 📷 Capturing real screenshots
 
 Run the app, open `/Admin` and `/Tv?theme=noir`, `/Tv?theme=ember`, `/Tv?theme=neon`, and save browser screenshots. Replace the illustrated SVG previews in `docs/screenshots/` with real screenshots when a running deployment is available.
+
+## 🍕 Chrilles Restaurang menu import
+
+The app now starts with **Chrilles Restaurang** and a curated JSON seed of **106 dishes and sides across 15 categories** in `Seed/chrilles-menu.json`. The seed is based on the restaurant's public online menu at https://www.chrillesrestaurang.se/ (checked 2026-11-23). The site's pizza numbering skips 12–15, repeated Fish and Chips entries were deduplicated, and the children's pizza discount is represented as a zero-price note requiring review rather than a negative menu price. Prices are copied as shown and should be verified before public use.
+
+**Existing installations:** Your `Data/menu.json` is never silently overwritten. In **Admin → Overview**, choose **Import missing Chrilles menu items** to add missing seeded IDs without overwriting existing edits, categories or images. The restaurant name is set to Chrilles Restaurang.
+
+### 📸 Multiple images per dish
+
+Each food item has an `ImageIds` gallery and a separate optional `ImageId` for the chosen TV image. Default is **no image**. Upload an image and optionally attach it to a food, or attach existing photos in **Image Library → Manage each food gallery**. Select the TV photo, remove photos from the gallery, or clear the selection. Removing a file from the global library also removes its gallery references.
+
+### 🍽️ Bulk update real food
+
+Each food item has an editable `IsRealFood` flag. Use **Admin → Food Items → Bulk update real food only** to update all qualifying items, optionally filtered by category. Supported actions: percentage price change, fixed price, badge and availability. Drinks, ice cream and sauces can be flagged as non-real-food and excluded. All 106 seeded items are individually editable, and sauces are excluded from bulk updates by default. Review the flag for new or ambiguous items.

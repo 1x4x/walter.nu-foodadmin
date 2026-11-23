@@ -13,6 +13,9 @@ function editFood(item) {
   }
   document.getElementById('food-Available').checked = !!item.Available;
   document.getElementById('food-Featured').checked = !!item.Featured;
+  document.getElementById('food-IsRealFood').checked = item.IsRealFood !== false;
+  const gallery = new Set(item.ImageIds || []);
+  document.querySelectorAll('#food-ImageIds option').forEach(option => option.selected = gallery.has(option.value));
   document.getElementById('food-form-title').textContent = 'Edit food item';
 }
 function editCategory(item) {

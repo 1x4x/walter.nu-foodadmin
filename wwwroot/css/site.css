@@ -181,3 +181,14 @@ button:hover{filter:brightness(1.14)}
 .sidebar-logo{padding:0 10px 35px}
 .admin-top{flex-wrap:wrap}
 @media(max-width:650px){.foodi-logo-header{width:155px}.foodi-logo-hero{width:180px}.foodi-logo-dashboard{width:110px}}
+
+/* Chrilles image gallery and bulk editor */
+.gallery-details{border:1px solid #383a46;background:#151720;border-radius:12px;padding:15px;margin:13px 0}
+.gallery-details summary{cursor:pointer;color:#f1f0f4;font-weight:800}
+.gallery-details[open] summary{margin-bottom:16px;color:var(--accent)}
+.gallery-strip{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.gallery-strip>div{width:115px;background:#22252e;border-radius:10px;overflow:hidden}
+.gallery-strip img{width:115px;height:90px;object-fit:cover;display:block}
+.gallery-strip small{display:block;padding:7px;font-size:10px;color:#c7c5d0;overflow-wrap:anywhere}
+.row-price small{display:block;font-size:10px;color:#a5a5b2;font-weight:500;margin-top:5px}
+.form-grid select[multiple]{min-height:150px}

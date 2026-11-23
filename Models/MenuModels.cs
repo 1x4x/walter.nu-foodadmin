@@ -15,7 +15,9 @@ public class FoodItem
     [StringLength(500)] public string Description { get; set; } = "";
     [Range(0, 1000000)] public decimal Price { get; set; }
     public string CategoryId { get; set; } = "";
-    public string ImageId { get; set; } = "";
+    public string ImageId { get; set; } = ""; // selected image; empty means no image
+    public List<string> ImageIds { get; set; } = new(); // image gallery per food
+    public bool IsRealFood { get; set; } = true;
     [StringLength(50)] public string Badge { get; set; } = "";
     [StringLength(250)] public string Allergens { get; set; } = "";
     public bool Available { get; set; } = true;
@@ -32,7 +34,7 @@ public class FoodImage
 public class RestaurantSettings
 {
     public string Theme { get; set; } = "noir";
-    [Required, StringLength(100)] public string Name { get; set; } = "NOIR & FLAME";
+    [Required, StringLength(100)] public string Name { get; set; } = "Chrilles Restaurang";
     [StringLength(120)] public string Subtitle { get; set; } = "THE ART OF GOOD FOOD";
     [StringLength(120)] public string Headline { get; set; } = "Made to crave.";
     [StringLength(280)] public string Description { get; set; } = "Bold flavors. Fresh ingredients. Unforgettable moments.";

@@ -13,7 +13,7 @@ public sealed class MenuStore
         var directory = Path.Combine(env.ContentRootPath, "Data");
         Directory.CreateDirectory(directory);
         path = Path.Combine(directory, "menu.json");
-        if (!File.Exists(path)) Save(CreateDemo());
+        if (!File.Exists(path)) Save(LoadChrillesSeed(env));
     }
 
     public MenuData Read()
@@ -37,6 +37,12 @@ public sealed class MenuStore
         var temporary = path + ".tmp";
         File.WriteAllText(temporary, JsonSerializer.Serialize(data, options));
         File.Move(temporary, path, true);
+    }
+
+    public static MenuData LoadChrillesSeed(IWebHostEnvironment env)
+    {
+        var seed = Path.Combine(env.ContentRootPath, "Seed", "chrilles-menu.json");
+        return JsonSerializer.Deserialize<MenuData>(File.ReadAllText(seed)) ?? throw new InvalidOperationException("Invalid Chrilles seed data");
     }
 
     private static MenuData CreateDemo()

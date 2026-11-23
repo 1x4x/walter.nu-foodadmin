@@ -26,7 +26,7 @@
         </div>
 
         <section class="admin-tab" id="tab-overview">
-            <div class="stats">
+            <form asp-action="ImportChrilles" method="post" onsubmit="return confirm('Import missing Chrilles menu items? Existing edits will be preserved.')"><button type="submit" class="btn">↻ Import missing Chrilles menu items</button></form><div class="stats">
                 <div class="stat"><span>MENU ITEMS</span><strong>@Model.Foods.Count</strong><small>Across all categories</small></div>
                 <div class="stat"><span>CATEGORIES</span><strong>@Model.Categories.Count</strong><small>Organize your dishes</small></div>
                 <div class="stat"><span>FOOD IMAGES</span><strong>@Model.Images.Count</strong><small>Ready for display</small></div>
@@ -52,13 +52,26 @@
                     <label>Category<select name="CategoryId" id="food-CategoryId" required><option value="">Select category</option>@foreach (var cat in Model.Categories) { <option value="@cat.Id">@cat.Name</option> }</select></label>
                     <label>Description<textarea maxlength="500" name="Description" id="food-Description" placeholder="Describe the dish"></textarea></label>
                     <label>Price<input name="Price" id="food-Price" type="number" step="0.01" min="0" required value="0" /></label>
-                    <label>Food image<select name="ImageId" id="food-ImageId"><option value="">No image</option>@foreach (var img in Model.Images) { <option value="@img.Id">@img.Alt (@img.FileName)</option> }</select></label>
+                    <label>Selected image (optional)<select name="ImageId" id="food-ImageId"><option value="">No image (default)</option>@foreach (var img in Model.Images) { <option value="@img.Id">@img.Alt (@img.FileName)</option> }</select></label>
+                    <label>Gallery images (Ctrl/Cmd-click for multiple)<select name="ImageIds" id="food-ImageIds" multiple size="6">@foreach (var img in Model.Images) { <option value="@img.Id">@img.Alt (@img.FileName)</option> }</select></label>
                     <label>Badge<input name="Badge" id="food-Badge" maxlength="50" placeholder="BEST SELLER / NEW / SPICY" /></label>
                     <label>Allergens<input name="Allergens" id="food-Allergens" maxlength="250" placeholder="Milk, gluten, nuts" /></label>
                     <label>Display order<input name="SortOrder" id="food-SortOrder" type="number" value="0" /></label>
                     <label class="check"><input type="checkbox" name="Available" value="true" id="food-Available" checked /> Available</label>
                     <label class="check"><input type="checkbox" name="Featured" value="true" id="food-Featured" /> Featured item</label>
+                    <label class="check"><input type="checkbox" name="IsRealFood" value="true" id="food-IsRealFood" checked /> Real food (included in bulk updates)</label>
                     <div class="full form-actions"><button type="submit" class="btn primary">Save food item</button><button type="button" class="btn" onclick="resetFood()">New item / Clear form</button></div>
+                </form>
+            </div>
+            <div class="panel"><span class="eyebrow">MASS EDITING</span><h2>Bulk update real food only</h2><p>Only dishes marked <strong>Real food</strong> are affected. Drinks, ice cream and other non-meal items are excluded. Optional category filter.</p>
+                <form asp-action="BulkFood" method="post" class="form-grid" onsubmit="return confirm('Apply this change to all matching real-food items?')">
+                    <label>Operation<select name="operation" required><option value="adjust-percent">Adjust price by %</option><option value="set-price">Set fixed price</option><option value="badge">Set badge</option><option value="availability">Set availability</option></select></label>
+                    <label>Category filter<select name="categoryId"><option value="">All real food categories</option>@foreach (var cat in Model.Categories) { <option value="@cat.Id">@cat.Name</option> }</select></label>
+                    <label>Percentage (+/-)<input name="percent" type="number" step="0.01" value="0" min="-100" max="1000" /></label>
+                    <label>Fixed price (kr)<input name="price" type="number" step="0.01" min="0" /></label>
+                    <label>Badge<input name="badge" maxlength="50" placeholder="NEW" /></label>
+                    <label>Availability<select name="available"><option value="">No change</option><option value="true">Available</option><option value="false">Unavailable</option></select></label>
+                    <div class="full"><button type="submit" class="btn primary">Apply bulk update</button></div>
                 </form>
             </div>
             <div class="panel"><h2>All food items</h2><div class="data-list">
@@ -68,7 +81,7 @@
                     <div class="data-row">
                         <div class="thumb" style="@(image is null ? "" : "background-image:url('/uploads/" + image.FileName + "')")">@(image is null ? "✦" : "")</div>
                         <div class="data-name"><strong>@food.Name</strong><small>@(cat?.Name ?? "Uncategorized") · @(food.Available ? "Available" : "Hidden")</small></div>
-                        <div class="row-price">@food.Price.ToString("0.##") @settings.Currency</div>
+                        <div class="row-price">@food.Price.ToString("0.##") @settings.Currency <small>@(food.IsRealFood ? "🍽️ Real food" : "🥤 Other") · @(food.ImageIds?.Count ?? 0) images</small></div>
                         <button type="button" class="btn small" data-item="@System.Text.Json.JsonSerializer.Serialize(food)" onclick="editFood(JSON.parse(this.dataset.item))">Edit</button>
                         <form asp-action="Delete" method="post" onsubmit="return confirm('Delete this dish?')"><input type="hidden" name="type" value="food" /><input type="hidden" name="id" value="@food.Id" /><button type="submit" class="btn small danger">Delete</button></form>
                     </div>
@@ -99,12 +112,24 @@
 
         <section class="admin-tab hidden" id="tab-images">
             <div class="panel"><span class="eyebrow">YOUR PHOTOGRAPHY</span><h2>Upload food photos</h2><p>JPEG, PNG or WebP, up to 8 MB per image.</p>
-                <form asp-action="Upload" method="post" enctype="multipart/form-data" class="upload-form">
+                <form asp-action="Upload" method="post" enctype="multipart/form-data" class="upload-form"><label>Assign to food (optional)<select name="foodId"><option value="">Unassigned image</option>@foreach (var food in Model.Foods) { <option value="@food.Id">@food.Name</option> }</select></label>
                     <label>Choose image<input name="file" type="file" accept="image/jpeg,image/png,image/webp" required /></label>
                     <label>Image description<input name="alt" maxlength="240" placeholder="e.g. Freshly baked pizza" /></label>
                     <button type="submit" class="btn primary">↑ Upload photo</button>
                 </form>
             </div>
+            <div class="panel"><h2>Manage each food gallery</h2><p>Attach existing uploads, select the TV image, remove from a gallery, or choose no image. Deleting a photo from the library removes it from all galleries.</p>
+            @foreach (var food in Model.Foods.OrderBy(x => x.Name)) {
+                <details class="gallery-details"><summary>@food.Name — @(food.ImageIds?.Count ?? 0) images — @(string.IsNullOrEmpty(food.ImageId) ? "No selected image" : "Image selected")</summary>
+                    <form asp-action="Gallery" method="post" class="upload-form">
+                        <input type="hidden" name="foodId" value="@food.Id" />
+                        <label>Photo<select name="imageId"><option value="">Choose image</option>@foreach (var img in Model.Images) { <option value="@img.Id">@img.Alt (@img.FileName)</option> }</select></label>
+                        <label>Action<select name="operation"><option value="attach">Attach to gallery</option><option value="select">Use as TV image</option><option value="detach">Remove from gallery</option><option value="clear">No image on TV</option></select></label>
+                        <button type="submit" class="btn primary">Apply</button>
+                    </form>
+                    <div class="gallery-strip">@foreach (var img in Model.Images.Where(x => food.ImageIds?.Contains(x.Id) == true)) { <div><img src="/uploads/@img.FileName" alt="@img.Alt" /><small>@(food.ImageId == img.Id ? "✓ TV image" : img.Alt)</small></div> }</div>
+                </details>
+            }</div>
             <div class="image-library">
                 @foreach (var img in Model.Images) {
                     <div class="library-card"><img loading="lazy" src="/uploads/@img.FileName" alt="@img.Alt" />
