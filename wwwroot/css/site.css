@@ -192,3 +192,8 @@ button:hover{filter:brightness(1.14)}
 .gallery-strip small{display:block;padding:7px;font-size:10px;color:#c7c5d0;overflow-wrap:anywhere}
 .row-price small{display:block;font-size:10px;color:#a5a5b2;font-weight:500;margin-top:5px}
 .form-grid select[multiple]{min-height:150px}
+
+/* Preserve aspect ratio of the official Italian pizza chef banner in all contexts. */
+.foodi-logo{object-fit:contain;object-position:left center}
+.foodi-logo-sidebar{width:220px;max-height:118px}
+.foodi-logo-hero{width:250px;max-height:145px}

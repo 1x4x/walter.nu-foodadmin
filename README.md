@@ -1,10 +1,10 @@
 # 🍕 FOODI Food Admin — Digital Menu Studio
 
-<p align="center"><img src="wwwroot/images/foodi-logo.png" alt="FOODI Food Admin smiling pizza logo" width="360" /></p>
+<p align="center"><img src="wwwroot/images/foodi-logo.png" alt="FOODI Food Admin Italian pizza chef logo and banner" width="520" /></p>
 
 <p align="center"><strong>🍕 Make every menu look delicious.</strong><br/>A cinematic restaurant TV menu and dark-mode management studio.</p>
 
-The official **FOODI Food Admin** smiling pizza mascot and red/green/white outlined wordmark is used as **one shared PNG** (`wwwroot/images/foodi-logo.png`) in the TV header, home hero, admin sidebar, dashboard, footer and favicon. Any future sign-in or boards pages should reuse this same asset.
+The official **FOODI Food Admin** Italian pizza chef banner is sourced from [`italiensk-pizzakock-med-foodi-banner-1.png`](italiensk-pizzakock-med-foodi-banner-1.png) and reused as **one local PNG** (`wwwroot/images/foodi-logo.png`) in the TV header, home hero, admin sidebar, dashboard, footer and favicon. Any future sign-in or boards pages should reuse the same local asset.
 
 **A cinematic dark-mode TV food menu and admin studio, built with ASP.NET Core MVC, C# and JSON files instead of SQL.**
 
@@ -138,7 +138,7 @@ walter.nu-foodadmin/
 │   ├── Home/Index.cshtml
 │   └── Shared/_Layout.cshtml
 ├── wwwroot/
-│   ├── images/foodi-logo.png   # shared branding + favicon
+│   ├── images/foodi-logo.png   # exact Italian pizza chef banner, shared branding + favicon
 │   ├── css/site.css
 │   ├── js/site.js
 │   └── uploads/               # created on first upload
