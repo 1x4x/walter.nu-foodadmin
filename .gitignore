@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+Data/
+wwwroot/uploads/
+*.user
+*.suo
+.DS_Store

@@ -1,0 +1,65 @@
+@model MenuData
+@{
+    ViewData["Title"] = "Digital Menu";
+    ViewData["BodyClass"] = "tv-body";
+    var s = Model.Settings;
+    var count = Model.Foods.Count(x => x.Available && Model.Categories.Any(c => c.Id == x.CategoryId && c.Visible));
+}
+<div class="menu-shell theme-@s.Theme" style="--restaurant-accent:@s.Accent" data-rotation="@s.SlideSeconds">
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">@s.LogoText</div>
+            <div><div class="brand-name">@s.Name</div><div class="brand-sub">@s.Subtitle</div></div>
+        </div>
+        <div class="top-right"><span class="live-dot"></span><span>FRESHLY MADE, EVERY DAY</span><span class="top-divider"></span><span class="clock" id="clock"></span></div>
+    </header>
+    <section class="hero">
+        <div class="hero-copy">
+            <div class="eyebrow"><span class="line"></span> WELCOME TO SOMETHING SPECIAL</div>
+            <h1>@s.Headline</h1>
+            <p>@s.Description</p>
+            <div class="hero-chips"><span>✦ FRESH INGREDIENTS</span><span>✦ MADE WITH LOVE</span><span>✦ BOLD FLAVORS</span></div>
+        </div>
+        <div class="hero-photo"><div class="hero-photo-overlay"></div><span class="hero-photo-caption">✦ A TASTE WORTH REMEMBERING</span></div>
+    </section>
+    <div class="section-heading">
+        <div><span class="eyebrow">HANDCRAFTED WITH PASSION</span><h2>Explore our menu<span class="accent-dot">.</span></h2></div>
+        <div class="heading-rule"></div>
+        <span class="menu-count">@count DELICIOUS CHOICES</span>
+    </div>
+    <main class="categories" id="categories">
+        @foreach (var category in Model.Categories.Where(x => x.Visible).OrderBy(x => x.SortOrder))
+        {
+            var foods = Model.Foods.Where(x => x.Available && x.CategoryId == category.Id).OrderByDescending(x => x.Featured).ThenBy(x => x.SortOrder).ToList();
+            if (foods.Count == 0) { continue; }
+            <section class="category-block">
+                <div class="category-title">
+                    <div><span class="category-kicker">THE COLLECTION</span><h3>@category.Name</h3><p>@category.Description</p></div>
+                    <span class="category-number">@foods.Count.ToString("00") ITEMS</span>
+                </div>
+                <div class="food-grid">
+                    @foreach (var food in foods)
+                    {
+                        var image = Model.Images.FirstOrDefault(i => i.Id == food.ImageId);
+                        <article class="food-card @(food.Featured ? "featured" : "")">
+                            <div class="food-photo" style="@(image is null ? "" : "background-image:url('/uploads/" + image.FileName + "')")">
+                                @if (image is null) { <span class="placeholder-icon">✦</span> }
+                                @if (!string.IsNullOrWhiteSpace(food.Badge)) { <span class="food-badge">@food.Badge</span> }
+                            </div>
+                            <div class="food-info">
+                                <div class="food-title-row"><h4>@food.Name</h4>@if (s.ShowPrices) { <span class="price">@food.Price.ToString("0.##") <small>@s.Currency</small></span> }</div>
+                                <p>@food.Description</p>
+                                @if (!string.IsNullOrWhiteSpace(food.Allergens)) { <div class="allergens">Contains: @food.Allergens</div> }
+                            </div>
+                        </article>
+                    }
+                </div>
+            </section>
+        }
+    </main>
+    <footer class="menu-footer"><strong>@s.Name <span>✦</span></strong><span>GOOD FOOD. GOOD MOOD. GREAT MEMORIES.</span><span>CRAFTED WITH PASSION</span></footer>
+</div>
+<div class="tv-controls">
+    <button type="button" onclick="document.documentElement.requestFullscreen?.()">⛶ Fullscreen</button>
+    <a href="/Admin">⚙ Admin</a>
+</div>

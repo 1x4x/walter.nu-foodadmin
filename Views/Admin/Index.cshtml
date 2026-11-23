@@ -1,0 +1,159 @@
+@model MenuData
+@{
+    ViewData["Title"] = "Control Center";
+    ViewData["BodyClass"] = "admin-body";
+    var settings = Model.Settings;
+}
+<div class="admin-layout" style="--restaurant-accent:@settings.Accent">
+    <aside class="sidebar">
+        <div class="sidebar-logo"><div class="brand-mark">@settings.LogoText</div><div><strong>VISION<span>.</span></strong><small>CONTROL CENTER</small></div></div>
+        <div class="nav-caption">WORKSPACE</div>
+        <button type="button" class="nav-link active" data-tab="overview" onclick="showTab('overview',this)">◈ &nbsp; Overview</button>
+        <button type="button" class="nav-link" data-tab="foods" onclick="showTab('foods',this)">◉ &nbsp; Food Items</button>
+        <button type="button" class="nav-link" data-tab="categories" onclick="showTab('categories',this)">▦ &nbsp; Categories</button>
+        <button type="button" class="nav-link" data-tab="images" onclick="showTab('images',this)">▧ &nbsp; Image Library</button>
+        <button type="button" class="nav-link" data-tab="themes" onclick="showTab('themes',this)">◈ &nbsp; TV Themes</button>
+        <button type="button" class="nav-link" data-tab="settings" onclick="showTab('settings',this)">⚙ &nbsp; Restaurant Settings</button>
+        <div class="sidebar-bottom">
+            <a href="/Tv" target="_blank" rel="noopener">↗ &nbsp; Open TV Display</a>
+            <form asp-action="Logout" method="post"><button type="submit" class="logout">⇥ &nbsp; Sign out</button></form>
+        </div>
+    </aside>
+    <main class="admin-main">
+        <div class="admin-top">
+            <div><span class="eyebrow">RESTAURANT MANAGEMENT</span><h1>Creative studio<span class="accent-dot">.</span></h1><p>Everything you need to make your menu shine.</p></div>
+            <a href="/Tv" target="_blank" rel="noopener" class="btn primary">↗ Preview live menu</a>
+        </div>
+
+        <section class="admin-tab" id="tab-overview">
+            <div class="stats">
+                <div class="stat"><span>MENU ITEMS</span><strong>@Model.Foods.Count</strong><small>Across all categories</small></div>
+                <div class="stat"><span>CATEGORIES</span><strong>@Model.Categories.Count</strong><small>Organize your dishes</small></div>
+                <div class="stat"><span>FOOD IMAGES</span><strong>@Model.Images.Count</strong><small>Ready for display</small></div>
+                <div class="stat"><span>AVAILABLE</span><strong>@Model.Foods.Count(x => x.Available)</strong><small>Visible on TV</small></div>
+            </div>
+            <div class="panel welcome-panel">
+                <span class="eyebrow">YOUR CREATIVE HOME</span><h2>A menu as memorable as your food. ✦</h2>
+                <p>Design and manage a beautiful restaurant menu in one place. Edit dishes, set prices, upload high-resolution imagery, and change between three distinct display themes.</p>
+                <div class="quick-actions">
+                    <button type="button" class="btn primary" onclick="showTab('foods')">+ Add food</button>
+                    <button type="button" class="btn" onclick="showTab('images')">↑ Upload images</button>
+                    <button type="button" class="btn" onclick="showTab('themes')">✦ Choose TV theme</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="admin-tab hidden" id="tab-foods">
+            <div class="panel">
+                <div class="panel-title"><span class="eyebrow">MENU MANAGEMENT</span><h2 id="food-form-title">Add or edit food</h2></div>
+                <form asp-action="Food" method="post" class="form-grid" id="food-form">
+                    <input type="hidden" name="Id" id="food-Id" value="@Guid.NewGuid().ToString("N")" />
+                    <label>Food name<input required maxlength="120" name="Name" id="food-Name" placeholder="e.g. Truffle Smash Burger" /></label>
+                    <label>Category<select name="CategoryId" id="food-CategoryId" required><option value="">Select category</option>@foreach (var cat in Model.Categories) { <option value="@cat.Id">@cat.Name</option> }</select></label>
+                    <label>Description<textarea maxlength="500" name="Description" id="food-Description" placeholder="Describe the dish"></textarea></label>
+                    <label>Price<input name="Price" id="food-Price" type="number" step="0.01" min="0" required value="0" /></label>
+                    <label>Food image<select name="ImageId" id="food-ImageId"><option value="">No image</option>@foreach (var img in Model.Images) { <option value="@img.Id">@img.Alt (@img.FileName)</option> }</select></label>
+                    <label>Badge<input name="Badge" id="food-Badge" maxlength="50" placeholder="BEST SELLER / NEW / SPICY" /></label>
+                    <label>Allergens<input name="Allergens" id="food-Allergens" maxlength="250" placeholder="Milk, gluten, nuts" /></label>
+                    <label>Display order<input name="SortOrder" id="food-SortOrder" type="number" value="0" /></label>
+                    <label class="check"><input type="checkbox" name="Available" value="true" id="food-Available" checked /> Available</label>
+                    <label class="check"><input type="checkbox" name="Featured" value="true" id="food-Featured" /> Featured item</label>
+                    <div class="full form-actions"><button type="submit" class="btn primary">Save food item</button><button type="button" class="btn" onclick="resetFood()">New item / Clear form</button></div>
+                </form>
+            </div>
+            <div class="panel"><h2>All food items</h2><div class="data-list">
+                @foreach (var food in Model.Foods.OrderBy(x => x.SortOrder)) {
+                    var image = Model.Images.FirstOrDefault(x => x.Id == food.ImageId);
+                    var cat = Model.Categories.FirstOrDefault(x => x.Id == food.CategoryId);
+                    <div class="data-row">
+                        <div class="thumb" style="@(image is null ? "" : "background-image:url('/uploads/" + image.FileName + "')")">@(image is null ? "✦" : "")</div>
+                        <div class="data-name"><strong>@food.Name</strong><small>@(cat?.Name ?? "Uncategorized") · @(food.Available ? "Available" : "Hidden")</small></div>
+                        <div class="row-price">@food.Price.ToString("0.##") @settings.Currency</div>
+                        <button type="button" class="btn small" data-item="@System.Text.Json.JsonSerializer.Serialize(food)" onclick="editFood(JSON.parse(this.dataset.item))">Edit</button>
+                        <form asp-action="Delete" method="post" onsubmit="return confirm('Delete this dish?')"><input type="hidden" name="type" value="food" /><input type="hidden" name="id" value="@food.Id" /><button type="submit" class="btn small danger">Delete</button></form>
+                    </div>
+                }
+            </div></div>
+        </section>
+
+        <section class="admin-tab hidden" id="tab-categories">
+            <div class="panel"><span class="eyebrow">KEEP IT ORGANIZED</span><h2>Add or edit categories</h2>
+                <form asp-action="Category" method="post" class="form-grid" id="category-form">
+                    <input type="hidden" name="Id" id="cat-Id" value="@Guid.NewGuid().ToString("N")" />
+                    <label>Name<input name="Name" id="cat-Name" required maxlength="100" placeholder="e.g. Desserts" /></label>
+                    <label>Description<input name="Description" id="cat-Description" maxlength="300" placeholder="Sweet endings" /></label>
+                    <label>Display order<input type="number" name="SortOrder" id="cat-SortOrder" value="0" /></label>
+                    <label class="check"><input type="checkbox" name="Visible" value="true" id="cat-Visible" checked /> Visible on TV</label>
+                    <div class="full form-actions"><button type="submit" class="btn primary">Save category</button><button type="button" class="btn" onclick="resetCategory()">New category</button></div>
+                </form>
+            </div>
+            <div class="panel"><h2>Categories</h2>
+                @foreach (var cat in Model.Categories.OrderBy(x => x.SortOrder)) {
+                    <div class="data-row"><div class="category-symbol">▦</div><div class="data-name"><strong>@cat.Name</strong><small>@cat.Description · @(cat.Visible ? "Visible" : "Hidden")</small></div>
+                        <button type="button" class="btn small" data-item="@System.Text.Json.JsonSerializer.Serialize(cat)" onclick="editCategory(JSON.parse(this.dataset.item))">Edit</button>
+                        <form asp-action="Delete" method="post" onsubmit="return confirm('Delete category? Items become uncategorized.')"><input type="hidden" name="type" value="category" /><input type="hidden" name="id" value="@cat.Id" /><button type="submit" class="btn small danger">Delete</button></form>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="admin-tab hidden" id="tab-images">
+            <div class="panel"><span class="eyebrow">YOUR PHOTOGRAPHY</span><h2>Upload food photos</h2><p>JPEG, PNG or WebP, up to 8 MB per image.</p>
+                <form asp-action="Upload" method="post" enctype="multipart/form-data" class="upload-form">
+                    <label>Choose image<input name="file" type="file" accept="image/jpeg,image/png,image/webp" required /></label>
+                    <label>Image description<input name="alt" maxlength="240" placeholder="e.g. Freshly baked pizza" /></label>
+                    <button type="submit" class="btn primary">↑ Upload photo</button>
+                </form>
+            </div>
+            <div class="image-library">
+                @foreach (var img in Model.Images) {
+                    <div class="library-card"><img loading="lazy" src="/uploads/@img.FileName" alt="@img.Alt" />
+                        <div><small>@img.FileName</small>
+                            <form asp-action="Image" method="post" class="image-edit"><input type="hidden" name="Id" value="@img.Id" /><input type="hidden" name="FileName" value="@img.FileName" /><input type="text" name="Alt" value="@img.Alt" maxlength="240" aria-label="Image description" /><button class="btn small" type="submit">Save</button></form>
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('Delete this image? It will be removed from any dishes using it.')"><input type="hidden" name="type" value="image" /><input type="hidden" name="id" value="@img.Id" /><button class="btn small danger" type="submit">Delete image</button></form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="admin-tab hidden" id="tab-themes">
+            <div class="panel"><span class="eyebrow">MAKE IT UNFORGETTABLE</span><h2>Your three TV identities.</h2><p>Preview any theme without changing the active TV. Save your selection to switch the restaurant display.</p>
+                <form asp-action="Settings" method="post" id="theme-form">
+                    <input type="hidden" name="Name" value="@settings.Name" /><input type="hidden" name="Subtitle" value="@settings.Subtitle" /><input type="hidden" name="Headline" value="@settings.Headline" />
+                    <input type="hidden" name="Description" value="@settings.Description" /><input type="hidden" name="Currency" value="@settings.Currency" />
+                    <input type="hidden" name="Accent" value="@settings.Accent" /><input type="hidden" name="LogoText" value="@settings.LogoText" /><input type="hidden" name="SlideSeconds" value="@settings.SlideSeconds" /><input type="hidden" name="ShowPrices" value="@settings.ShowPrices.ToString().ToLowerInvariant()" />
+                    <div class="theme-picker">
+                        @foreach (var theme in new[] { ("noir", "Noir & Gold", "Luxury editorial design with black, champagne-gold, refined serif typography.", "Made to crave.", "STEAK · BURGERS"), ("ember", "Ember & Flame", "Fire-kissed charcoal, glowing orange, bold modern typography.", "FIRE UP YOUR HUNGER.", "GRILL · SMOKE"), ("neon", "Neon Bistro", "Electric violet and pink with glossy cards and futuristic glowing accents.", "TASTE THE FUTURE.", "EAT · GLOW") }) {
+                            <label class="theme-option @(settings.Theme == theme.Item1 ? "selected" : "")">
+                                <span class="theme-radio"><input type="radio" name="Theme" value="@theme.Item1" @(settings.Theme == theme.Item1 ? "checked" : "") /> Select design</span>
+                                <div class="theme-mini theme-mini-@theme.Item1"><div class="mini-top"><b>RESTAURANT VISION</b><span>✦ MENU</span></div><div class="mini-hero"><small>FRESH • DELICIOUS</small><strong>@theme.Item4</strong><span>@theme.Item5</span></div><div class="mini-items"><span>Signature Experience <b>189 kr</b></span><span>Chef's Favourite <b>169 kr</b></span></div></div>
+                                <strong>@theme.Item2</strong><p>@theme.Item3</p>
+                                <a href="/Tv?theme=@theme.Item1" target="_blank" rel="noopener" class="theme-preview-link" onclick="event.stopPropagation()">↗ Preview this theme</a>
+                            </label>
+                        }
+                    </div>
+                    <div class="theme-actions"><button type="submit" class="btn primary">✦ Save selected theme</button><span>Active theme: <strong>@settings.Theme.ToUpperInvariant()</strong></span></div>
+                </form>
+            </div>
+        </section>
+
+        <section class="admin-tab hidden" id="tab-settings">
+            <div class="panel"><span class="eyebrow">MAKE IT YOURS</span><h2>Restaurant settings</h2>
+                <form asp-action="Settings" method="post" class="form-grid">
+                    <input type="hidden" name="Theme" value="@settings.Theme" />
+                    <label>Restaurant name<input name="Name" maxlength="100" value="@settings.Name" required /></label>
+                    <label>Logo initials<input name="LogoText" maxlength="8" value="@settings.LogoText" /></label>
+                    <label>Subtitle<input name="Subtitle" maxlength="120" value="@settings.Subtitle" /></label>
+                    <label>Hero headline<input name="Headline" maxlength="120" value="@settings.Headline" /></label>
+                    <label>Hero description<textarea name="Description" maxlength="280">@settings.Description</textarea></label>
+                    <label>Currency<input name="Currency" maxlength="12" value="@settings.Currency" /></label>
+                    <label>Custom accent color<input name="Accent" type="color" value="@settings.Accent" /></label>
+                    <label>Rotation interval (seconds)<input name="SlideSeconds" type="number" min="3" max="120" value="@settings.SlideSeconds" /></label>
+                    <label class="check"><input type="checkbox" name="ShowPrices" value="true" @(settings.ShowPrices ? "checked" : "") /> Show prices on TV</label>
+                    <div class="full"><button type="submit" class="btn primary">Save restaurant settings</button></div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
