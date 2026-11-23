@@ -18,27 +18,31 @@ The official **FOODI Food Admin** Italian pizza chef banner is sourced from [`it
 
 ## 📸 Restaurant layout screenshots
 
-The repository currently contains **`xxlayout1.png`**, **`xxlayout2.psd`**, and **`xxlayout3.psd`**. Only layout 1 is currently available as a PNG; layouts 2 and 3 are Photoshop source files, which GitHub Markdown cannot display inline. Export those PSDs as `xxlayout2.png` and `xxlayout3.png` to complete the three-image screenshot gallery.
+Explore the three FOODI restaurant layout screenshots. Click an image to open its full-size PNG in GitHub.
 
-### 🍕 Layout 1 — PNG screenshot
+| 🍕 Layout 1 | 🎨 Layout 2 | 🖥️ Layout 3 |
+|:---:|:---:|:---:|
+| [![FOODI restaurant layout 1](xxlayout1.png)](xxlayout1.png) | [![FOODI restaurant layout 2](xxlayout2.png)](xxlayout2.png) | [![FOODI restaurant layout 3](xxlayout3.png)](xxlayout3.png) |
+| [View full-size screenshot](xxlayout1.png) | [View full-size screenshot](xxlayout2.png) | [View full-size screenshot](xxlayout3.png) |
 
-[![FOODI restaurant layout 1](xxlayout1.png)](xxlayout1.png)
+<details>
+<summary>🖼️ View each screenshot at full README width</summary>
 
-### 🎨 Layout 2 — Photoshop source
+### Layout 1
 
-[Download or view xxlayout2.psd](xxlayout2.psd)
+![FOODI restaurant layout 1 screenshot](xxlayout1.png)
 
-<!-- Once xxlayout2.png is added to the repository, uncomment this line:
-![FOODI restaurant layout 2](xxlayout2.png)
--->
+### Layout 2
 
-### 🖥️ Layout 3 — Photoshop source
+![FOODI restaurant layout 2 screenshot](xxlayout2.png)
 
-[Download or view xxlayout3.psd](xxlayout3.psd)
+### Layout 3
 
-<!-- Once xxlayout3.png is added to the repository, uncomment this line:
-![FOODI restaurant layout 3](xxlayout3.png)
--->
+![FOODI restaurant layout 3 screenshot](xxlayout3.png)
+
+</details>
+
+The original Photoshop source files for layouts 2 and 3 are also available: [xxlayout2.psd](xxlayout2.psd) · [xxlayout3.psd](xxlayout3.psd).
 
 ---
 
