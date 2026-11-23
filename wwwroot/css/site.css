@@ -171,3 +171,13 @@ button:hover{filter:brightness(1.14)}
 @media(max-width:1260px){.stats{grid-template-columns:repeat(2,1fr)}.theme-picker,.image-library{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:950px){.food-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr}.hero-photo{min-height:220px}.sidebar{position:static;width:100%;height:auto}.admin-layout{display:block}.admin-main{margin:0;width:100%;padding:32px 25px}.sidebar-logo{padding-bottom:20px}.sidebar-bottom{margin-top:10px}.top-right{display:none}}
 @media(max-width:650px){.menu-shell{padding:0 18px}.topbar{min-height:86px}.brand-name{font-size:16px}.hero-copy{padding:35px 25px}.hero h1{font-size:52px}.hero-chips{gap:6px}.hero-chips span{font-size:8px}.section-heading{flex-wrap:wrap;margin-top:45px}.heading-rule{display:none}.food-grid,.stats,.form-grid,.theme-picker,.image-library{grid-template-columns:1fr}.food-photo{height:220px}.menu-footer{flex-wrap:wrap}.admin-top{display:block}.admin-top h1{font-size:40px}.admin-top>.btn{margin-top:16px}.data-row{flex-wrap:wrap}.theme-option>p{min-height:0}}
+/* Shared FOODI identity: one PNG reused across every application surface. */
+.foodi-logo{display:block;object-fit:contain;object-position:left center;max-width:100%;height:auto;filter:drop-shadow(0 4px 15px #0008)}
+.foodi-logo-header{width:215px;max-height:90px}
+.foodi-logo-hero{width:230px;margin-bottom:18px;max-height:130px}
+.foodi-logo-sidebar{width:215px;max-height:110px}
+.foodi-logo-dashboard{width:145px;max-height:90px;flex-shrink:0}
+.foodi-logo-footer{width:130px;max-height:80px}
+.sidebar-logo{padding:0 10px 35px}
+.admin-top{flex-wrap:wrap}
+@media(max-width:650px){.foodi-logo-header{width:155px}.foodi-logo-hero{width:180px}.foodi-logo-dashboard{width:110px}}

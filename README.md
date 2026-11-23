@@ -1,4 +1,8 @@
-# ✦ Restaurant Vision — Digital Menu Studio
+# 🍕 FOODI Food Admin — Digital Menu Studio
+
+![FOODI Food Admin](wwwroot/images/foodi-logo.png)
+
+The official **FOODI Food Admin** smiling pizza mascot and red/green/white outlined wordmark is used as **one shared PNG** (`wwwroot/images/foodi-logo.png`) in the TV header, home hero, admin sidebar, dashboard, footer and favicon. Any future sign-in or boards pages should reuse this same asset.
 
 **A cinematic dark-mode TV food menu and admin studio, built with ASP.NET Core MVC, C# and JSON files instead of SQL.**
 
