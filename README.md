@@ -16,6 +16,32 @@ The official **FOODI Food Admin** Italian pizza chef banner is sourced from [`it
 
 > **Screenshot note:** The four images below are illustrated UI previews based on the application design, not captures of a running .NET application. For real screenshots, run the app and capture `/Tv` and `/Admin` in a browser.
 
+## 📸 Restaurant layout screenshots
+
+The repository currently contains **`xxlayout1.png`**, **`xxlayout2.psd`**, and **`xxlayout3.psd`**. Only layout 1 is currently available as a PNG; layouts 2 and 3 are Photoshop source files, which GitHub Markdown cannot display inline. Export those PSDs as `xxlayout2.png` and `xxlayout3.png` to complete the three-image screenshot gallery.
+
+### 🍕 Layout 1 — PNG screenshot
+
+[![FOODI restaurant layout 1](xxlayout1.png)](xxlayout1.png)
+
+### 🎨 Layout 2 — Photoshop source
+
+[Download or view xxlayout2.psd](xxlayout2.psd)
+
+<!-- Once xxlayout2.png is added to the repository, uncomment this line:
+![FOODI restaurant layout 2](xxlayout2.png)
+-->
+
+### 🖥️ Layout 3 — Photoshop source
+
+[Download or view xxlayout3.psd](xxlayout3.psd)
+
+<!-- Once xxlayout3.png is added to the repository, uncomment this line:
+![FOODI restaurant layout 3](xxlayout3.png)
+-->
+
+---
+
 ## 🖼️ Screenshots & visual previews
 
 ### 🎛️ Admin control center
